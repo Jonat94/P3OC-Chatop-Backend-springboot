@@ -1,10 +1,16 @@
 package com.chatop.chatopapi.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chatop.chatopapi.exceptions.PostRentalException;
 import com.chatop.chatopapi.exceptions.RentalsNotFoundException;
 import com.chatop.chatopapi.model.Rental;
 import com.chatop.chatopapi.service.RentalService;
@@ -18,7 +24,7 @@ import lombok.Data;
 public class RentalController {
 
 	@Autowired
-	private RentalService rentalServices;
+	private RentalService rentalService;
 
 	/**
 	 * Read - Get all Rentals
@@ -30,10 +36,51 @@ public class RentalController {
 	
 	@GetMapping("/rentals")
 	public Iterable<Rental> getRental() {
-		Iterable<Rental> rentals = rentalServices.getRentals();
+		Iterable<Rental> rentals = this.rentalService.getRentals();
 		if (rentals==null) {
 			throw new RentalsNotFoundException("rantal list not found for /api/rentals end point");
 		}
 			return rentals;
+	}
+	
+	
+	
+	/**
+	 * Read - Get one rental 
+	 * @param id The id of the rental
+	 * @return A Rental object full filled
+	 */
+	
+	@ApiOperation(value = "Get one rental in json format (id, name, surface, price, picture, description, owner_id, created_at) with {id} as url parameter")
+	
+	@GetMapping("/rentals/{id}")
+	public Rental getRental(@PathVariable("id") final Long id) {
+		Optional<Rental> rental = this.rentalService.getRental(id);
+		if(rental.isPresent()) {
+			return rental.get();
+		} else {
+			throw new RentalsNotFoundException("rantal list not found for /api/rentals end point");
+		}
+	}
+	
+	
+	/**
+	 * Write - Add one rental 
+	 * @param id The id of the rental
+	 * @return A json object containing "Rental created !"
+	 */
+	
+	@ApiOperation(value = "Add one rental in json format (id, name, surface, price, picture, description, owner_id, created_at)")
+	
+	
+	@PostMapping("/rentals")
+	public String createEmployee(@RequestBody Rental rental) {
+		Rental rent = this.rentalService.saveRental(rental);
+		if(rent!=null) {
+			return "{\"message\": \"Rental created !\"}";
+		} else {
+			
+			throw new PostRentalException("Rantal Post controller error");
+		}
 	}
 }
