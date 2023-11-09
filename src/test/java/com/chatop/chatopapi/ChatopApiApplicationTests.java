@@ -21,7 +21,7 @@ import com.chatop.chatopapi.service.RentalService;
 class RentalControllerTests {
 
 	@Autowired
-	private MockMvc mockMvc;
+	private MockMvc mockMvc; 
 
 	@MockBean
 	private RentalService rentalService;
