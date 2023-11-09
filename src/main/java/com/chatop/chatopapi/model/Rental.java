@@ -16,10 +16,6 @@ import lombok.Data;
 @Table(name = "RENTALS")
 public class Rental {
 
-	
-
-	
-
 	public Rental() {
 	}
 
@@ -37,13 +33,13 @@ public class Rental {
 
 	private String picture;
 
-	@Column(name="created_at")
+	@Column(name = "created_at")
 	private String createdAt;
 
-	@Column(name="updated_at")
+	@Column(name = "updated_at")
 	private String updatedAt;
 
-	@Column(name="owner_id")
+	@Column(name = "owner_id")
 	private Long ownerId;
 
 }

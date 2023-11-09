@@ -6,6 +6,4 @@ import org.springframework.stereotype.Repository;
 import com.chatop.chatopapi.model.Rental;
 
 @Repository
-public interface RentalRepository extends CrudRepository<Rental, Long> {
-
-}
+public interface RentalRepository extends CrudRepository<Rental, Long> { }

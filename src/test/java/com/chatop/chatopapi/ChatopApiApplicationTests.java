@@ -29,5 +29,6 @@ class RentalControllerTests {
 	void testGetRentals() throws Exception {
 		mockMvc.perform(get("/api/rentals")).andExpect(status().isOk());
 	}
+		
 
 }
