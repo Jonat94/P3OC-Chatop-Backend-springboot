@@ -12,5 +12,4 @@ public class ChatopApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ChatopApiApplication.class, args);
 	}
-
 }
