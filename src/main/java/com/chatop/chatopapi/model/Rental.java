@@ -2,6 +2,7 @@ package com.chatop.chatopapi.model;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,24 +16,34 @@ import lombok.Data;
 @Table(name = "RENTALS")
 public class Rental {
 
+	
+
+	
+
+	public Rental() {
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	private String name;
 
-	private String price;
+	private Double price;
 
-	private String surface;
+	private Double surface;
 
 	private String description;
 
 	private String picture;
 
-	private Timestamp created_at;
+	@Column(name="created_at")
+	private String createdAt;
 
-	private Timestamp updated_at;
+	@Column(name="updated_at")
+	private String updatedAt;
 
-	private Long owner_id;
+	@Column(name="owner_id")
+	private Long ownerId;
 
 }

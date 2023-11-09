@@ -20,13 +20,17 @@ public class RentalController {
 
 	/**
 	 * Read - Get all Rentals
-	 * 
+	 * (Long id, String name, Double price, Double surface, String description, String picture,
+			String createdAt, String updatedAt, Long ownerId)
 	 * @return - An Iterable object of Rental full filled
 	 */
 	@GetMapping("/rentals")
 	public Iterable<Rental> getRental() {
-		//Rental r(1,)
+		//Rental r = new Rental(1L, "name");
+		//Iterable<Rental> i = null;
+		System.out.println(rentalServices.getRentals());
 		return rentalServices.getRentals();
+		//return rentalServices.getRentals();
 	}
 
 }
