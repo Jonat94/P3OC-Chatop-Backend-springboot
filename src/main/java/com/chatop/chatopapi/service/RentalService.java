@@ -26,12 +26,18 @@ public class RentalService {
 		return rentalRepository.findById(id);
 	}
 	
-	
-	
-
 	public Rental saveRental(Rental rental) {
-		Rental savedRental = rentalRepository.save(rental);
-		return savedRental;
+		if(rental.getId() == null)
+			return this.rentalRepository.save(rental);
+		return null;
+	}
+
+	public Rental updateRental(Rental rental, Long id) {
+		System.out.println(id);
+		if(id!=null)
+			return this.rentalRepository.save(rental);
+		return null;
+	
 	}
 
 }
