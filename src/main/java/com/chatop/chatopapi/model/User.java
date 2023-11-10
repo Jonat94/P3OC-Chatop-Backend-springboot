@@ -13,7 +13,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "USERS")
+@Table(name = "OWNERS")
 public class User {
 
 	public User() {
@@ -25,7 +25,7 @@ public class User {
 		this.id = id;
 		this.email = email;
 		this.name = name;
-		this.password = password;
+		//this.password = password;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
@@ -40,7 +40,7 @@ public class User {
 
 	private String name;
 
-	private String password;
+	//private String password;
 
 	@Column(name = "created_at")
 	private String createdAt;
