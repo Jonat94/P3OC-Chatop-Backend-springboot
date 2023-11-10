@@ -22,8 +22,8 @@ public class RentalService {
 		return rentalRepository.findAll();
 	}
 
-	public Optional<Rental> getRental(Long id) {
-		return rentalRepository.findById(id);
+	public Rental getRental(Long id) {
+		return rentalRepository.findById(id).get();
 	}
 	
 	public Rental saveRental(Rental rental) {
@@ -32,11 +32,11 @@ public class RentalService {
 		return null;
 	}
 
-	public Rental updateRental(Rental rental, Long id) {
-		System.out.println(id);
-		if(id!=null)
-			return this.rentalRepository.save(rental);
-		return null;
+	
+		//a modifier eventuellement pour retourner un objet rental
+	public String updateRental(Rental rental) {
+		Rental r = this.rentalRepository.save(rental);
+		return "{\"message\": \"Rental updated !\"}";
 	
 	}
 

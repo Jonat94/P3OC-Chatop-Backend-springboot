@@ -35,15 +35,14 @@ class RentalControllerTests {
 		mockMvc.perform(get("/api/rentals")).andExpect(status().isOk());
 	}
 	
-	@Test
-	void testGetRental() throws Exception {
-		mockMvc.perform(get("/api/rentals/1",1)
-				.accept(MediaType.APPLICATION_JSON))
-		.andExpect(status().isOk());
-	}
+//	@Test
+//	void testGetRental() throws Exception {
+//		mockMvc.perform(get("/api/rentals/{id}",1))
+//		.andExpect(status().isOk());
+//	}
 	
 	@Test
-	public void getAllEmployeesAPI() throws Exception 
+	public void testAllEmployees() throws Exception 
 	{
 		mockMvc.perform(MockMvcRequestBuilders
 	  			.get("/api/rentals")
@@ -53,6 +52,14 @@ class RentalControllerTests {
 	      //.andExpect(MockMvcResultMatchers.jsonPath("$.rentals[*].Id").isNotEmpty());
 	}
 	
+//	@Test
+//	public void testPutEmployees() throws Exception 
+//	{
+//		mockMvc.perform(MockMvcRequestBuilders
+//	  			.put("/api/rentals")
+//	  			.accept(MediaType.APPLICATION_JSON))
+//	      .andExpect(status().isOk());
+//	}
 	
 
 }

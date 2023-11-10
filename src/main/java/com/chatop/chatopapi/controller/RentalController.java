@@ -21,6 +21,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.Data;
 
 @Data
+
 @RestController
 @RequestMapping("/api")
 public class RentalController {
@@ -41,7 +42,7 @@ public class RentalController {
 	public Iterable<Rental> getRental() {
 		Iterable<Rental> rentals = this.rentalService.getRentals();
 		if (rentals == null) {
-			throw new RentalsNotFoundException("rantal list not found for /api/rentals end point");
+			throw new RentalsNotFoundException("Rental list not found Exception: /api/rentals end point");
 		}
 		return rentals;
 	}
@@ -57,11 +58,12 @@ public class RentalController {
 
 	@GetMapping("/rentals/{id}")
 	public Rental getRental(@PathVariable("id") final Long id) {
-		Optional<Rental> rental = this.rentalService.getRental(id);
-		if (rental.isPresent()) {
-			return rental.get();
+		Rental rental = this.rentalService.getRental(id);
+		//System.out.println("_____>" + rental);
+		if (rental.getId() != null) {
+			return rental;
 		} else {
-			throw new RentalsNotFoundException("rantal list not found for /api/rentals end point");
+			throw new RentalsNotFoundException("Rental not found Exception: /api/rentals/{i} end point");
 		}
 	}
 
@@ -79,7 +81,7 @@ public class RentalController {
 		Rental rent = this.rentalService.saveRental(rental);
 		if (rent != null)
 			return "{\"message\": \"Rental created !\"}";
-		throw new PostRentalException("Rantal Post controller error");
+		throw new PostRentalException("Rental Post controller error");
 	}
 
 	/**
@@ -90,13 +92,27 @@ public class RentalController {
 	 * @throws PutRentalException
 	 */
 
-	@ApiOperation(value = "Update one rental in json format (id, name, surface, price, picture, description, owner_id, created_at)")
+	@ApiOperation(value = "Update one rental in json format (id, name, surface, price, picture, description, owner_id, created_at) id and name are mandatory.")
 
 	@PutMapping("/rentals/{id}")
 	public String updateRental(@RequestBody Rental rental, @PathVariable("id") final Long id) {
-		Rental rent = this.rentalService.updateRental(rental, id);
-		if (rent != null)
-			return "{\"message\": \"Rental updated !\"}";
-		throw new PutRentalException("Rental Put controller error");
+		String messageBad = "{\"message\": \"update error\"}";
+		System.out.println(rental);
+		if (rental.getName() == null || rental.getName() =="" ) 
+		{
+			this.rentalService.updateRental(rental);
+			return messageBad;
+		}
+		if (rental.getId() != id && rental.getId() != null) 
+		{
+			this.rentalService.updateRental(rental);
+			return messageBad;
+		}
+		if (rental.getId() == null)
+			return this.rentalService.updateRental(rental);
+
+		this.rentalService.updateRental(rental);
+		return this.rentalService.updateRental(rental);
+
 	}
 }
