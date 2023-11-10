@@ -13,47 +13,39 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "RENTALS")
-public class Rental {
+@Table(name = "USERS")
+public class User {
 
-	public Rental() {
+	public User() {
 	}
 
 
-	public Rental(Long id, String name, Double price, Double surface, String description, String picture,
-			String createdAt, String updatedAt, Long ownerId) {
+
+	public User(Long id, String email, String name, String password, String createdAt, String updatedAt) {
 		this.id = id;
+		this.email = email;
 		this.name = name;
-		this.price = price;
-		this.surface = surface;
-		this.description = description;
-		this.picture = picture;
+		this.password = password;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
-		this.ownerId = ownerId;
 	}
+
+
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	private String email;
+
 	private String name;
 
-	private Double price;
-
-	private Double surface;
-
-	private String description;
-
-	private String picture;
+	private String password;
 
 	@Column(name = "created_at")
 	private String createdAt;
 
 	@Column(name = "updated_at")
 	private String updatedAt;
-
-	@Column(name = "owner_id")
-	private Long ownerId;
 
 }
