@@ -10,7 +10,7 @@ public class RentalNotFoundException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public RentalNotFoundException(String s) {
+	public RentalNotFoundException( final String s) {
 		super(s);
 		System.out.println(s);
 	}

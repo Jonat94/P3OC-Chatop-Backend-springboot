@@ -1,5 +1,8 @@
 package com.chatop.chatopapi.service;
 
+
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,9 @@ public class RentalService {
 	}
 	
 	public Rental saveRental(Rental rental) {
+		Date date = new Date();
+		Timestamp ts =new Timestamp(date.getTime());
+		rental.setUpdatedAt(ts);
 		if(rental.getId() == null)
 			return this.rentalRepository.save(rental);
 		return null;

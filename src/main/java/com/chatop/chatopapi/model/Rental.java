@@ -1,5 +1,6 @@
 package com.chatop.chatopapi.model;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
@@ -21,7 +22,7 @@ public class Rental {
 
 
 	public Rental(Long id, String name, Double price, Double surface, String description, String picture,
-			String createdAt, String updatedAt, Long ownerId) {
+			Timestamp createdAt, Timestamp updatedAt, Long ownerId) {
 		this.id = id;
 		this.name = name;
 		this.price = price;
@@ -48,10 +49,10 @@ public class Rental {
 	private String picture;
 
 	@Column(name = "created_at")
-	private String createdAt;
+	private Timestamp createdAt;
 
 	@Column(name = "updated_at")
-	private String updatedAt;
+	private Timestamp updatedAt;
 
 	@Column(name = "owner_id")
 	private Long ownerId;

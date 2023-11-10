@@ -8,7 +8,7 @@ public class PostRentalException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 	
-	public PostRentalException(String s){
+	public PostRentalException(final String s){
 		super(s);
 		System.out.println(s);
 	}

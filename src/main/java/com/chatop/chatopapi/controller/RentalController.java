@@ -79,6 +79,7 @@ public class RentalController {
 	@PostMapping("/rentals")
 	public String createRental(@RequestBody Rental rental) {
 		Rental rent = this.rentalService.saveRental(rental);
+		System.out.println(rent);
 		if (rent != null)
 			return "{\"message\": \"Rental created !\"}";
 		throw new PostRentalException("Rental Post controller error");

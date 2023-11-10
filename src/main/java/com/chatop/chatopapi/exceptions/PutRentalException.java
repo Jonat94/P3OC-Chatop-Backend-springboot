@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class PutRentalException extends RuntimeException {
 	
-	public PutRentalException(String s){
+	public PutRentalException(final String s){
 		super(s);
 		System.out.println(s);
 	}
