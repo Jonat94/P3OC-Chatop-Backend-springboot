@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chatop.chatopapi.ChatopApiApplication;
 import com.chatop.chatopapi.exceptions.PostRentalException;
 import com.chatop.chatopapi.exceptions.PutRentalException;
 import com.chatop.chatopapi.exceptions.RentalsNotFoundException;
@@ -70,7 +71,29 @@ public class RentalController {
 		}
 	}
 
+	/**
+	 * Write - Add one rental
+	 * 
+	 * 
+	 * @return A json object containing "Rental created !"
+	 */
+
 	
+	private static final SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
+	
+	@ApiOperation(value = "Add one rental in json format (id, name, surface, price, picture, description, owner_id, created_at)")
+	@PostMapping("/rentals")
+	public String createRental(@RequestBody Rental rental) {
+		
+		System.out.println(rental.getCreatedAt());
+
+		rental.setUpdatedAt( ChatopApiApplication.getDate() );
+		Rental rent = this.rentalService.saveRental(rental);
+		if (rent != null)
+			return "{\"message\": \"Rental created !\"}";
+		throw new PostRentalException("Rental Post controller error");
+	}
 
 	/**
 	 * Write - Update one rental
