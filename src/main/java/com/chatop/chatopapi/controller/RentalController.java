@@ -1,5 +1,8 @@
 package com.chatop.chatopapi.controller;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,22 +70,7 @@ public class RentalController {
 		}
 	}
 
-	/**
-	 * Write - Add one rental
-	 * 
-	 * 
-	 * @return A json object containing "Rental created !"
-	 */
-
-	@ApiOperation(value = "Add one rental in json format (id, name, surface, price, picture, description, owner_id, created_at)")
-
-	@PostMapping("/rentals")
-	public String createRental(@RequestBody Rental rental) {
-		Rental rent = this.rentalService.saveRental(rental);
-		if (rent != null)
-			return "{\"message\": \"Rental created !\"}";
-		throw new PostRentalException("Rental Post controller error");
-	}
+	
 
 	/**
 	 * Write - Update one rental
