@@ -1,9 +1,5 @@
 package com.chatop.chatopapi.controller;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,13 +7,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.chatop.chatopapi.ChatopApiApplication;
 import com.chatop.chatopapi.exceptions.CustomException;
-import com.chatop.chatopapi.exceptions.PostRentalException;
 import com.chatop.chatopapi.model.Author;
-import com.chatop.chatopapi.model.Rental;
 import com.chatop.chatopapi.service.AuthorService;
-
 
 import io.swagger.annotations.ApiOperation;
 import lombok.Data;

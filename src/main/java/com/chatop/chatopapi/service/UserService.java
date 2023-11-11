@@ -9,18 +9,10 @@ import com.chatop.chatopapi.repository.UserRepository;
 @Service
 public class UserService {
 	
-
 	@Autowired
 	private UserRepository userRepository;
 
-	public User getUser(Long id) {
-		
+	public User getUser(Long id) {	
 		return this.userRepository.findById(id).get();
 	}
-	
-	
-	
-	
-	
-
 }

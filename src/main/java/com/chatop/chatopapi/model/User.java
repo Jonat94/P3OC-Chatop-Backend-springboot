@@ -39,8 +39,6 @@ public class User {
 
 	private String name;
 
-	//private String password;
-
 	@Column(name = "created_at")
 	private String createdAt;
 

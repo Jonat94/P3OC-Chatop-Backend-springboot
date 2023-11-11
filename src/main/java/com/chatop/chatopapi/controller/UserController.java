@@ -6,10 +6,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.chatop.chatopapi.exceptions.UserNotFoundException;
+import com.chatop.chatopapi.exceptions.CustomException;
 import com.chatop.chatopapi.model.User;
 import com.chatop.chatopapi.service.UserService;
-
 
 import io.swagger.annotations.ApiOperation;
 import lombok.Data;
@@ -40,7 +39,7 @@ public class UserController {
 		if (user.getId() != null) {
 			return user;
 		} else {
-			throw new UserNotFoundException("User not found Exception: /api/user/{i} end point");
+			throw new CustomException("User not found Exception: /api/user/{i} end point");
 		}
 	}
 }
