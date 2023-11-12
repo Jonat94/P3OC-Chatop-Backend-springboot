@@ -6,7 +6,5 @@ import org.springframework.stereotype.Repository;
 
 import com.chatop.chatopapi.model.User;
 
-
-
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> { }

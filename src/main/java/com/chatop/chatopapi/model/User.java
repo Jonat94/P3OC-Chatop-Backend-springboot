@@ -19,8 +19,6 @@ public class User {
 	public User() {
 	}
 
-
-
 	public User(Long id, String email, String name, String password, String createdAt, String updatedAt) {
 		this.id = id;
 		this.email = email;
@@ -28,8 +26,6 @@ public class User {
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
-
-
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
