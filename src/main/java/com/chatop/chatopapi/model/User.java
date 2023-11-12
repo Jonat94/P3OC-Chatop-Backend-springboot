@@ -13,23 +13,20 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "OWNERS")
+@Table(name = "USERS")
 public class User {
 
 	public User() {
 	}
 
-
-
-	public User(Long id, String email, String name, String createdAt, String updatedAt) {
+	public User(Long id, String email, String name, String password, String createdAt, String updatedAt) {
 		this.id = id;
 		this.email = email;
 		this.name = name;
+		this.password = password;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
-
-
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +35,8 @@ public class User {
 	private String email;
 
 	private String name;
+
+	private String password;
 
 	@Column(name = "created_at")
 	private String createdAt;
