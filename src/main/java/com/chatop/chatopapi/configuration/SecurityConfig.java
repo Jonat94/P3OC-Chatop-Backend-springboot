@@ -22,36 +22,4 @@ import com.chatop.chatopapi.service.AuthService;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
-	  @Autowired
-	    private AuthService authService;
-
-	//    @Autowired
-	//    private JwtFilter jwtFilter;
-	/*
-	    @Override
-	    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-	        auth.userDetailsService(authService);
-	    }
-	    */
-	/*    @Bean
-	    public PasswordEncoder passwordEncoder(){
-	        return NoOpPasswordEncoder.getInstance();
-	    }
-	    */
-
-	    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
-	    @Override
-	    public AuthenticationManager authenticationManagerBean() throws Exception {
-	        return super.authenticationManagerBean();
-	    }
-	    
-
-	/*    @Override
-	    protected void configure(HttpSecurity http) throws Exception {
-	        http.csrf().disable().authorizeRequests().antMatchers("/authenticate")
-	                .permitAll().anyRequest().authenticated()
-	                .and().exceptionHandling().and().sessionManagement()
-	                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-	        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);;
-	    }*/
 	}

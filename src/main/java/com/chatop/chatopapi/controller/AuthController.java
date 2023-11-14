@@ -29,20 +29,10 @@ public class AuthController {
 	
 	@ApiOperation(value = "User login password verification (param username , password)")
 
-//	@PostMapping(path = "/login")
-//	public String validateLogin(@RequestBody Credentials cr) {
-////		String username = cr.getUsername();
-////		String password = cr.getPassword();
-//		return restServices.authentification(cr);
-//	}
-	
-	@PostMapping(path = "/login2")
-	public String validateLogin(@RequestBody User user) {
-//		String username = cr.getUsername();
-//		String password = cr.getPassword();
-		return restServices.authentification(user);
+	@PostMapping(path = "/login")
+	public String hello(@RequestBody Credentials cr) {
+	return "helloworld";
 	}
-	
 	
 	
 	
