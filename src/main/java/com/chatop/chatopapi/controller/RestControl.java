@@ -135,7 +135,7 @@ public class RestControl {
 		r.setDescription(description);
 		r.setSurface(surface);
 		r.setPrice(price);
-		
+
 		Rental rent = this.restService.updateRental(r);
 
 		if (rent != null)
@@ -177,19 +177,14 @@ public class RestControl {
 //	
 //	
 //	}
-	
+
 //	@ResponseBody
 //	@PostMapping("/somepath")
 //	public String doSomeThing(@RequestBody LoginObject lo){
 //		System.out.println("aa:"+ lo.getUsername());
 //	    return "Parameters are " ;
 //	}
-	
-	
-	
-	 
-	 
-	
+
 	/**
 	 * Write - Add one rental
 	 * 

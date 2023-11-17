@@ -7,20 +7,21 @@ import java.util.Date;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
+//@ComponentScan(basePackages = "org.springframework.security.authentication.AuthenticationManager")
 @EnableSwagger2
 public class ChatopApiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ChatopApiApplication.class, args);
 	}
-	
-	
+
 	public static String getDate() {
 		SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -28,12 +29,10 @@ public class ChatopApiApplication {
 		return sdf3.format(new Timestamp(new Date().getTime())).toString();
 
 	}
-	
+
 	@Bean
-	public PasswordEncoder passwordEncoder()
-	{
+	public PasswordEncoder passwordEncoder() {
 		return NoOpPasswordEncoder.getInstance();
 	}
 
 }
-

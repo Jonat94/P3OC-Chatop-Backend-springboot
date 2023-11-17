@@ -21,14 +21,10 @@ public class RestService {
 	
 	@Autowired
 	private RentalRepository rentalRepository;
+	
+	@Autowired
 	private UserRepository userRepository;
-	//private AuthorRepository authorRepository;
-/*
-	public Author getAuthor(Long id) {
-		
-		return this.authorRepository.findById(id).get();
-	}	
-	*/
+	
 	public String login(String user, String password) {
 		 return "{token : jwt}";		 
 	 }
