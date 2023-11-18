@@ -125,10 +125,4 @@ public class AuthController {
 		final String token = new JwtTokenUtil().generateToken(userDetails);
 		return token;
 	}
-
-	@Data
-	public static class Credentials {
-		private String username = null;
-		private String password = null;
-	}
 }

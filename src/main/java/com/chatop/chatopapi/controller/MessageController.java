@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chatop.chatopapi.exceptions.CustomException;
+import com.chatop.chatopapi.exceptions.FourHundredException;
 import com.chatop.chatopapi.exceptions.FourOoneException;
 import com.chatop.chatopapi.model.Message;
 import com.chatop.chatopapi.model.MessageRequest;
@@ -31,8 +32,10 @@ public class MessageController {
 	public String createMessage(@RequestBody MessageRequest messageRequest,@RequestHeader(value="Authorization") String authorizationHeader) {
 	
 		System.out.println(authorizationHeader);
-	
-		
+		if(messageRequest.getRental_id() == null ||messageRequest.getRental_id()==null || messageRequest.getMessage()==null)
+		   throw new FourHundredException("Some fields are missing");
+		if(authorizationHeader == "tesrt")
+				throw new FourOoneException("test");
 		Message message = new Message();
 		message.setRentalId(messageRequest.getRental_id());
 		message.setUserId( messageRequest.getUser_id());
