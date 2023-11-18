@@ -8,9 +8,7 @@ public class FourOoneException extends  RuntimeException  {
 	private static final long serialVersionUID = 1L;
 
 	public FourOoneException(String s) {
-		
 		super(s);
-		
 		System.out.println("Forbiden Access exception :" + s);
 	}
 

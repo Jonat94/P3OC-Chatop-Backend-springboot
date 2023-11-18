@@ -1,9 +1,5 @@
 package com.chatop.chatopapi.controller;
 
-import java.util.Map;
-
-import javax.persistence.Entity;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,17 +7,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.chatop.chatopapi.exceptions.CustomException;
 import com.chatop.chatopapi.model.Rental;
 import com.chatop.chatopapi.model.User;
+import com.chatop.chatopapi.service.AuthService;
 import com.chatop.chatopapi.service.RestService;
 
 import io.swagger.annotations.ApiOperation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.Data;
 
 @Data
@@ -143,67 +138,9 @@ public class RestControl {
 		throw new CustomException("Rental put controller error, rental update fail");
 	}
 
-	/**
-	 * Read - Get all Authors (Long id, String name, Double price, Double surface,
-	 * String description, String picture, String createdAt, String updatedAt, Long
-	 * ownerId)
-	 * 
-	 * @return - An Iterable object of Author full filled
-	 */
-//	@ApiOperation(value = "Get all authors in json format (id, name, surface, price, picture, description, owner_id, created_at")
-//
-//	@GetMapping("/me")
-//	public User getUser() {
-//		User user = this.restService.getUser(null);
-//		if (user == null) {
-//			throw new CustomException("Author list not found Exception: /api/authors end point");
-//		}
-//		return user;
-//	}
-
-	/**
-	 * Write - Add one rental
-	 * 
-	 * 
-	 * @return A json object containing "Rental created !"
-	 */
-
-//	@PostMapping("/auth/login")
-//	@ResponseBody
-//	public String login(@RequestBody Credentials c) {
-//		System.out.println("param values : " + c);
-//		//this.restService.login("log", "pass");
-//		return "{\"message\": \"error\"}";
-//	
-//	
-//	}
-
-//	@ResponseBody
-//	@PostMapping("/somepath")
-//	public String doSomeThing(@RequestBody LoginObject lo){
-//		System.out.println("aa:"+ lo.getUsername());
-//	    return "Parameters are " ;
-//	}
-
-	/**
-	 * Write - Add one rental
-	 * 
-	 * 
-	 * @return A json object containing "Rental created !"
-	 */
-
-	/*
-	 * @ApiOperation(value =
-	 * "Add one author in json format (id, name, surface, price, picture, description, owner_id, created_at)"
-	 * )
-	 * 
-	 * @PostMapping("/register")
-	 * 
-	 * public String createAuthor(@RequestBody Author author) {
-	 * System.out.println("debut register"); Author rent =
-	 * this.authorService.saveAuthor(author); if (rent != null) return
-	 * "{\"message\": \"Author created !\"}"; throw new
-	 * CustomException("Author Post controller error"); }
-	 */
+	
+	
+	
+	
 
 }
