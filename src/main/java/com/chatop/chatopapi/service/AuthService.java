@@ -36,6 +36,18 @@ public class AuthService implements UserDetailsService  {
 		return userRepository.findByEmail(username).get(0);
 	}
 
+	public void registerUser(String name, String password, String email) {
+		
+		com.chatop.chatopapi.model.User user = new com.chatop.chatopapi.model.User();
+		user.setName(name);
+		user.setPassword(password);
+		user.setEmail(email);
+		
+		userRepository.save(user);
+		
+		
+	}
+
 	/*
 	public HashMap<String,String> getInfos(String username) {
 		List<com.chatop.chatopapi.model.User> l;

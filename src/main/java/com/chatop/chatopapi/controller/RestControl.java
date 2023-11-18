@@ -150,16 +150,16 @@ public class RestControl {
 	 * 
 	 * @return - An Iterable object of Author full filled
 	 */
-	@ApiOperation(value = "Get all authors in json format (id, name, surface, price, picture, description, owner_id, created_at")
-
-	@GetMapping("/me")
-	public User getUser() {
-		User user = this.restService.getUser(null);
-		if (user == null) {
-			throw new CustomException("Author list not found Exception: /api/authors end point");
-		}
-		return user;
-	}
+//	@ApiOperation(value = "Get all authors in json format (id, name, surface, price, picture, description, owner_id, created_at")
+//
+//	@GetMapping("/me")
+//	public User getUser() {
+//		User user = this.restService.getUser(null);
+//		if (user == null) {
+//			throw new CustomException("Author list not found Exception: /api/authors end point");
+//		}
+//		return user;
+//	}
 
 	/**
 	 * Write - Add one rental
