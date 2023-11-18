@@ -42,5 +42,5 @@ public class User {
 
 	@Column(name = "updated_at")
 	private String updatedAt;
-
+	
 }

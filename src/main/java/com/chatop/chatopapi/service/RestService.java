@@ -25,10 +25,11 @@ public class RestService {
 	@Autowired
 	private UserRepository userRepository;
 	
+	/*
 	public String login(String user, String password) {
 		 return "{token : jwt}";		 
 	 }
-	 
+	 */
 	public User getUser(Long id) {	
 		return this.userRepository.findById(id).get();
 	}
