@@ -20,6 +20,7 @@ import com.chatop.chatopapi.ChatopApiApplication;
 import com.chatop.chatopapi.exceptions.FourOoneException;
 import com.chatop.chatopapi.model.AuthRequest;
 import com.chatop.chatopapi.model.AuthResponse;
+import com.chatop.chatopapi.model.RegisterRequest;
 import com.chatop.chatopapi.model.User;
 import com.chatop.chatopapi.model.UserDisplay;
 import com.chatop.chatopapi.repository.UserRepository;
@@ -75,21 +76,21 @@ public class AuthController {
 	}
 
 	@PostMapping(path = "/register")
-	public String registerUser(@Param("name") String name,  @Param("password") String password, @Param("email") String email) {
+	public String registerUser(@RequestBody RegisterRequest registerRequest) {
 			
-		System.out.println(name);
+		System.out.println(registerRequest.getName());
 		
-		if(name ==null || email ==null || password == null)
+		if(registerRequest.getName() ==null || registerRequest.getEmail() ==null || registerRequest.getPassword() == null)
 		{
 		throw new FourOoneException("Some data are missing");
 		}
 		else
 		{
-			authService.registerUser(name,password,email);
+			authService.registerUser(registerRequest.getName(),registerRequest.getPassword(),registerRequest.getEmail());
 		}
 		try 
 		{
-			return authent(email,password);
+			return authent(registerRequest.getEmail(),registerRequest.getPassword());
 		}
 		catch(Exception e)
 		{
@@ -102,13 +103,13 @@ public class AuthController {
 	public AuthResponse authenticate(@RequestBody AuthRequest jwtRequest) throws Exception {
 		try {
 			authenticationManager.authenticate(
-					new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword()));
+					new UsernamePasswordAuthenticationToken(jwtRequest.getLogin(), jwtRequest.getPassword()));
 
 		} catch (BadCredentialsException e) {
 			throw new Exception("INVALIDE CREDENTIALS", e);
 		}
 
-		final UserDetails userDetails = authService.loadUserByUsername(jwtRequest.getUsername());
+		final UserDetails userDetails = authService.loadUserByUsername(jwtRequest.getLogin());
 
 		final String token = new JwtTokenUtil().generateToken(userDetails);
 
