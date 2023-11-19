@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MessageRequest {
-	private String message;
-	private Long user_id;
-	private Long rental_id;
-	//private token
+public class TokenResponse implements Response {
+private String token;
 }
+
+
+

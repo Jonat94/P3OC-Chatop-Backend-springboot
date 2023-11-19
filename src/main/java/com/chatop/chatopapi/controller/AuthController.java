@@ -21,8 +21,10 @@ import com.chatop.chatopapi.ChatopApiApplication;
 import com.chatop.chatopapi.exceptions.FourHundredException;
 import com.chatop.chatopapi.exceptions.FourOoneException;
 import com.chatop.chatopapi.model.AuthRequest;
-import com.chatop.chatopapi.model.AuthResponse;
+import com.chatop.chatopapi.model.TokenResponse;
+import com.chatop.chatopapi.model.MessageResponse;
 import com.chatop.chatopapi.model.RegisterRequest;
+import com.chatop.chatopapi.model.Response;
 import com.chatop.chatopapi.model.User;
 import com.chatop.chatopapi.model.UserDisplay;
 import com.chatop.chatopapi.repository.UserRepository;
@@ -80,61 +82,58 @@ public class AuthController {
 		return userDisplay;
 	}
 
-	@PostMapping(path = "/register")
+	@PostMapping(path = "/register", produces = "application/json")
 	public String registerUser(@RequestBody RegisterRequest registerRequest) {
-			System.out.println(registerRequest);
-		System.out.println(registerRequest.getName());
-		
-		if(registerRequest.getName() ==null || registerRequest.getEmail() ==null || registerRequest.getPassword() == null)
-		{
+
+		if (registerRequest.getName() == null || registerRequest.getEmail() == null
+				|| registerRequest.getPassword() == null) {
 			throw new FourOoneException("Some data are missing");
-		}
-		else
-		{
+		} else {
 			try {
-				
+
 				String encodedPassword = bCryptPasswordEncoder.encode(registerRequest.getPassword());
-			authService.registerUser(registerRequest.getName(),encodedPassword,registerRequest.getEmail());
+				authService.registerUser(registerRequest.getName(), encodedPassword, registerRequest.getEmail());
+			} catch (Exception e) {
+				return "{}";
+				//throw new FourHundredException("Duplicate entry");
 			}
-			catch ( Exception e ) {
-				throw new FourHundredException("Duplicate entry");
-			}
-			}
-		
-			final UserDetails userDetails = authService.loadUserByUsername(registerRequest.getEmail());
-			
-			final String token = jwtTokentUtil.generateToken(userDetails);
-			
-			return token;
+		}
+
+		final UserDetails userDetails = authService.loadUserByUsername(registerRequest.getEmail());
+
+		final String token = jwtTokentUtil.generateToken(userDetails);
+
+		return "{\"token\":\"" + token + "\"}";
 	}
 
 	@PostMapping("/login")
-	public AuthResponse authenticate(@RequestBody AuthRequest jwtRequest) throws Exception {
+	public Response authenticate(@RequestBody AuthRequest jwtRequest) throws Exception {
 		try {
 			authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(jwtRequest.getLogin(), jwtRequest.getPassword()));
 
 		} catch (BadCredentialsException e) {
-			throw new Exception("INVALIDE CREDENTIALS", e);
+			return new MessageResponse("error");
 		}
-
+			
 		final UserDetails userDetails = authService.loadUserByUsername(jwtRequest.getLogin());
 
 		final String token = jwtTokentUtil.generateToken(userDetails);
 
-		return new AuthResponse(token);
+		return new TokenResponse(token);
 	}
-
-	public String authent(String username, String password) throws Exception {
+/*
+	public String thent(String username, String password) throws Exception {
 		/*try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 		} catch (BadCredentialsException e) {
 			throw new Exception("INVALIDE CREDENTIALS", e);
 		}*/
-		final UserDetails userDetails = authService.loadUserByUsername(username);
+	/*	final UserDetails userDetails = authService.loadUserByUsername(username);
 		final String token = jwtTokentUtil.generateToken(userDetails);
-		return token;
+		return 
 	}
+*/
 
 	@Data
 	public static class Credentials {
