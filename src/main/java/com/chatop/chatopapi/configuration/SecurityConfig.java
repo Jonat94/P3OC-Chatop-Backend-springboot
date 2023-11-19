@@ -2,6 +2,8 @@ package com.chatop.chatopapi.configuration;
 
 
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,15 +38,36 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable()
-		.authorizeRequests()
-		.antMatchers("/api/auth/login").permitAll()
-		.antMatchers("/api/auth/register").permitAll()
-		.anyRequest().authenticated()
-		.and()
-		.sessionManagement()
-		.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		//Disable csrf
+		http = http.csrf().disable();
 		
+		
+		
+		//Set session mangment to stateless
+		http.sessionManagement()
+		.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		.and();
+		
+		// Set unauthorized requests exception handler
+       http = http
+            .exceptionHandling()
+            .authenticationEntryPoint(
+                (request, response, ex) -> {
+                    response.sendError(
+                        HttpServletResponse.SC_UNAUTHORIZED,
+                        ex.getMessage()
+                    );
+                }
+            ).and();
+        
+      //Set Permissions on end points
+      		http.authorizeRequests()
+      		.antMatchers("/api/auth/login").permitAll()
+      		.antMatchers("/api/auth/register").permitAll()
+      		.anyRequest().authenticated();
+		
+		
+		//add JWT token filter
 		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
 	}
