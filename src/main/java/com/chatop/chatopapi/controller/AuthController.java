@@ -10,6 +10,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.chatop.chatopapi.ChatopApiApplication;
+import com.chatop.chatopapi.exceptions.FourHundredException;
 import com.chatop.chatopapi.exceptions.FourOoneException;
 import com.chatop.chatopapi.model.AuthRequest;
 import com.chatop.chatopapi.model.AuthResponse;
@@ -46,6 +48,9 @@ public class AuthController {
 
 	@Autowired
 	UserDisplay userDisplay;
+	
+	@Autowired
+	 BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	/**
 	 * write - Get the credential for identification
@@ -77,26 +82,30 @@ public class AuthController {
 
 	@PostMapping(path = "/register")
 	public String registerUser(@RequestBody RegisterRequest registerRequest) {
-			
+			System.out.println(registerRequest);
 		System.out.println(registerRequest.getName());
 		
 		if(registerRequest.getName() ==null || registerRequest.getEmail() ==null || registerRequest.getPassword() == null)
 		{
-		throw new FourOoneException("Some data are missing");
+			throw new FourOoneException("Some data are missing");
 		}
 		else
 		{
-			authService.registerUser(registerRequest.getName(),registerRequest.getPassword(),registerRequest.getEmail());
-		}
-		try 
-		{
-			return authent(registerRequest.getEmail(),registerRequest.getPassword());
-		}
-		catch(Exception e)
-		{
-		throw new FourOoneException( "authentification failed");
-		}
+			try {
+				
+				String encodedPassword = bCryptPasswordEncoder.encode(registerRequest.getPassword());
+			authService.registerUser(registerRequest.getName(),encodedPassword,registerRequest.getEmail());
+			}
+			catch ( Exception e ) {
+				throw new FourHundredException("Duplicate entry");
+			}
+			}
 		
+			final UserDetails userDetails = authService.loadUserByUsername(registerRequest.getEmail());
+			
+			final String token = new JwtTokenUtil().generateToken(userDetails);
+			
+			return token;
 	}
 
 	@PostMapping("/login")
@@ -117,11 +126,11 @@ public class AuthController {
 	}
 
 	public String authent(String username, String password) throws Exception {
-		try {
+		/*try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 		} catch (BadCredentialsException e) {
 			throw new Exception("INVALIDE CREDENTIALS", e);
-		}
+		}*/
 		final UserDetails userDetails = authService.loadUserByUsername(username);
 		final String token = new JwtTokenUtil().generateToken(userDetails);
 		return token;

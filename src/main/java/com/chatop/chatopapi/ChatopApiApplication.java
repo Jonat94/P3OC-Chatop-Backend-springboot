@@ -43,10 +43,10 @@ public class ChatopApiApplication {
 		return dateTime.format(formatter2);
 }
 	
-
+/*
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return NoOpPasswordEncoder.getInstance();
 	}
-
+*/
 }
