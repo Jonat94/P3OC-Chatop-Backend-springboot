@@ -44,13 +44,13 @@ public class AuthController {
 	private AuthenticationManager authenticationManager;
 
 	@Autowired
-	AuthService authService;
+	private AuthService authService;
 
 	@Autowired
-	UserDisplay userDisplay;
+	private UserDisplay userDisplay;
 	
 	@Autowired
-	 BCryptPasswordEncoder bCryptPasswordEncoder;
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	/**
 	 * write - Get the credential for identification
@@ -103,7 +103,7 @@ public class AuthController {
 		
 			final UserDetails userDetails = authService.loadUserByUsername(registerRequest.getEmail());
 			
-			final String token = new JwtTokenUtil().generateToken(userDetails);
+			final String token = jwtTokentUtil.generateToken(userDetails);
 			
 			return token;
 	}
@@ -120,7 +120,7 @@ public class AuthController {
 
 		final UserDetails userDetails = authService.loadUserByUsername(jwtRequest.getLogin());
 
-		final String token = new JwtTokenUtil().generateToken(userDetails);
+		final String token = jwtTokentUtil.generateToken(userDetails);
 
 		return new AuthResponse(token);
 	}
@@ -132,7 +132,7 @@ public class AuthController {
 			throw new Exception("INVALIDE CREDENTIALS", e);
 		}*/
 		final UserDetails userDetails = authService.loadUserByUsername(username);
-		final String token = new JwtTokenUtil().generateToken(userDetails);
+		final String token = jwtTokentUtil.generateToken(userDetails);
 		return token;
 	}
 

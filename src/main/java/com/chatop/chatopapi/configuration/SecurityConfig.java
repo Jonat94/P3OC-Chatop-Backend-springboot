@@ -23,10 +23,10 @@ import com.chatop.chatopapi.service.AuthService;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
-	AuthService authService;
+	private AuthService authService;
 
 	@Autowired
-	JwtRequestFilter jwtRequestFilter;
+	private JwtRequestFilter jwtRequestFilter;
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
