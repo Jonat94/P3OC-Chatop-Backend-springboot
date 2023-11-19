@@ -2,19 +2,37 @@ package com.chatop.chatopapi.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.chatop.chatopapi.ChatopApiApplication;
 import com.chatop.chatopapi.exceptions.CustomException;
+import com.chatop.chatopapi.exceptions.FourHundredException;
+import com.chatop.chatopapi.exceptions.FourOoneException;
+import com.chatop.chatopapi.model.AuthRequest;
+import com.chatop.chatopapi.model.Message;
+import com.chatop.chatopapi.model.MessageRequest;
+import com.chatop.chatopapi.model.RegisterRequest;
 import com.chatop.chatopapi.model.Rental;
 import com.chatop.chatopapi.model.User;
+import com.chatop.chatopapi.model.UserResponse;
 import com.chatop.chatopapi.service.AuthService;
+import com.chatop.chatopapi.service.MessageService;
 import com.chatop.chatopapi.service.RestService;
+import com.chatop.chatopapi.util.JwtTokenUtil;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.Data;
@@ -27,12 +45,32 @@ public class RestControl {
 
 	@Autowired
 	private RestService restService;
+	
+	@Autowired
+	private JwtTokenUtil jwtTokentUtil;
+
+	@Autowired
+	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private AuthService authService;
+
+	@Autowired
+	private UserResponse userResponse;
+	
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
+	@Autowired
+	MessageService messageService;
+
 
 	/**
 	 * Read - Get one user
 	 * 
 	 * @param id The id of the user
 	 * @return A User object full filled
+	 * @throws CustomException
 	 */
 
 	@ApiOperation(value = "Get one user in json format (id, name, surface, price, picture, description, user_id, created_at) with {id} as url parameter")
@@ -40,7 +78,6 @@ public class RestControl {
 	@GetMapping("/user/{id}")
 	public User getUser(@PathVariable("id") final Long id) {
 		User user = this.restService.getUser(id);
-		// System.out.println("_____>" + user);
 		if (user.getId() != null) {
 			return user;
 		} else {
@@ -52,7 +89,6 @@ public class RestControl {
 	 * Read - Get all Rentals (Long id, String name, Double price, Double surface,
 	 * String description, String picture, String createdAt, String updatedAt, Long
 	 * ownerId)
-	 * 
 	 * @return - An Iterable object of Rental full filled
 	 */
 	@ApiOperation(value = "Get all rentals in json format (id, name, surface, price, picture, description, owner_id, created_at")
@@ -68,9 +104,9 @@ public class RestControl {
 
 	/**
 	 * Read - Get one rental
-	 * 
 	 * @param id The id of the rental
 	 * @return A Rental object full filled
+	 * @throws CustomException
 	 */
 
 	@ApiOperation(value = "Get one rental in json format (id, name, surface, price, picture, description, owner_id, created_at) with {id} as url parameter")
@@ -78,7 +114,6 @@ public class RestControl {
 	@GetMapping("/rentals/{id}")
 	public Rental getRental(@PathVariable("id") final Long id) {
 		Rental rental = this.restService.getRental(id);
-		// System.out.println("_____>" + rental);
 		if (rental.getId() != null) {
 			return rental;
 		} else {
@@ -88,9 +123,9 @@ public class RestControl {
 
 	/**
 	 * Write - Add one rental
-	 * 
-	 * 
+	 * @param name, surface, price, picture, description
 	 * @return A json object containing "Rental created !"
+	 * @throws CustomException
 	 */
 
 	@ApiOperation(value = "Add one rental in json format (id, name, surface, price, picture, description, owner_id, created_at)")
@@ -115,7 +150,7 @@ public class RestControl {
 	 * 
 	 * @param id The id of the rental
 	 * @return A json object containing "Rental created !"
-	 * @throws PutRentalException
+	 * @throws CustomException
 	 */
 
 	@ApiOperation(value = "Update one rental in json format (id, name, surface, price, picture, description, owner_id, created_at) id and name are mandatory.")
@@ -138,9 +173,116 @@ public class RestControl {
 		throw new CustomException("Rental put controller error, rental update fail");
 	}
 
+
 	
+	/**
+	 * read - Get informations on the current user
+	 * @param Connected user credentials
+	 * @return A User Response object containing the informations
+	 */
+
+	@ApiOperation(value = "Return informations on the curent user")
+
+	@GetMapping(path = "/auth/me")
+	public UserResponse currentUserInfo(@AuthenticationPrincipal UserDetails userDetails) {
+		User user;
+
+		user = authService.getUserInfos(userDetails.getUsername());
+		userResponse.setId(user.getId());
+		userResponse.setName(user.getName());
+		userResponse.setUsername(user.getEmail());
+		userResponse.setUpdatedAt(ChatopApiApplication.formatDate(user.getUpdatedAt()));
+		userResponse.setCreatedAt(ChatopApiApplication.formatDate(user.getCreatedAt()));
+
+		return userResponse;
+	}
+
 	
+	/**
+	 * write - Register one user in the db.
+	 * @param name ,email , password of the user.
+	 * @return A jwt in a json object corresponding to this user.
+	 * @throws FourOone Exception
+	 */
+
+
+	@ApiOperation(value = "Register a user with his name email and password.")
+
+	@PostMapping(path = "/auth/register", produces = "application/json")
+	public String registerUser(@RequestBody RegisterRequest registerRequest) {
+
+		if (registerRequest.getName() == null || registerRequest.getEmail() == null
+				|| registerRequest.getPassword() == null) {
+			throw new FourOoneException("Some data are missing");
+		} else {
+			try {
+
+				String encodedPassword = bCryptPasswordEncoder.encode(registerRequest.getPassword());
+				authService.registerUser(registerRequest.getName(), encodedPassword, registerRequest.getEmail());
+			} catch (Exception e) {
+				return "{}";
+			}
+		}
+
+		final UserDetails userDetails = authService.loadUserByUsername(registerRequest.getEmail());
+
+		final String token = jwtTokentUtil.generateToken(userDetails);
+
+		return "{\"token\":\"" + token + "\"}";
+	}
+
 	
+	/**
+	 * read - Authenticate a user and respond with a jwt
+	 * 
+	 * @param email , password of the user.
+	 * @return A jwt in a json object corresponding to this user.
+	 */
+
+	@ApiOperation(value = "Authenticate a user with his email and password and return a json object containing a jwt")
+	
+	@PostMapping("/auth/login")
+	public String authenticate(@RequestBody AuthRequest jwtRequest) throws Exception {
+		try {
+			authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(jwtRequest.getLogin(), jwtRequest.getPassword()));
+
+		} catch (BadCredentialsException e) {
+			return "{\"message\":\"error\"}";
+		}
+			
+		final UserDetails userDetails = authService.loadUserByUsername(jwtRequest.getLogin());
+		
+		final String token = jwtTokentUtil.generateToken(userDetails);
+
+		return "{\"token\":\"" + token + "\"}";
+	}
+	
+
+	
+	/**
+	 * write - Save a text message in the db with the user Id and rental Id
+	 * 
+	 * @param  a String message, long user_id, long rental_id in json format.
+	 * @return A a json success message or a bad request.
+	 */
+
+
+	@ApiOperation(value = "Save a message with his user id and rental id")
+	
+	@PostMapping("/messages")
+	public String createMessage(@RequestBody MessageRequest messageRequest) {
+			if(messageRequest.getRental_id()==null|| messageRequest.getUser_id()==null||messageRequest.getMessage()==null)
+				throw new FourHundredException("Paramètre non valide");
+		Message message = new Message();
+		message.setRentalId(messageRequest.getRental_id());
+		message.setUserId( messageRequest.getUser_id());
+		message.setMessage(messageRequest.getMessage());
+		messageService.saveMessage(message);
+			
+		return "{\"message\": \"Message sent with success\"}";
+		
+	}
 	
 
 }

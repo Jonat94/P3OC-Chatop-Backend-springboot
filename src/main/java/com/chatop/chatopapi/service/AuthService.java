@@ -1,8 +1,6 @@
 package com.chatop.chatopapi.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -47,19 +45,4 @@ public class AuthService implements UserDetailsService  {
 		
 		
 	}
-
-	/*
-	public HashMap<String,String> getInfos(String username) {
-		List<com.chatop.chatopapi.model.User> l;
-		HashMap<String,String> h = new HashMap<String,String>();
-		
-		l=userRepository.findByEmail(username);
-		h.put("id", l.get(0).getId());
-		h.put("email", l.get(0).getEmail());
-		h.put("name", l.get(0).getName());
-		h.put("createdAt", l.get(0).getCreatedAt());
-		h.put("updatedAt", l.get(0).getUpdatedAt());
-		System.out.println(h);
-		return h;
-	}*/
 }

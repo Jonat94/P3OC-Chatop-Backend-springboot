@@ -1,7 +1,5 @@
 package com.chatop.chatopapi.model;
 
-import java.sql.Timestamp;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,17 +13,6 @@ import lombok.Data;
 @Entity
 @Table(name = "USERS")
 public class User {
-
-	public User() {
-	}
-
-	public User(Long id, String email, String name, String password, String createdAt, String updatedAt) {
-		this.id = id;
-		this.email = email;
-		this.name = name;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
-	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
