@@ -13,25 +13,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.chatop.chatopapi.ChatopApiApplication;
 import com.chatop.chatopapi.exceptions.CustomException;
 import com.chatop.chatopapi.exceptions.FourHundredException;
 import com.chatop.chatopapi.exceptions.FourOoneException;
+import com.chatop.chatopapi.model.AppUser;
 import com.chatop.chatopapi.model.AuthRequest;
 import com.chatop.chatopapi.model.Message;
 import com.chatop.chatopapi.model.MessageRequest;
 import com.chatop.chatopapi.model.RegisterRequest;
 import com.chatop.chatopapi.model.Rental;
-import com.chatop.chatopapi.model.User;
 import com.chatop.chatopapi.model.UserResponse;
-import com.chatop.chatopapi.service.AuthService;
-import com.chatop.chatopapi.service.MessageService;
-import com.chatop.chatopapi.service.RestService;
+import com.chatop.chatopapi.service.ApiService;
+import com.chatop.chatopapi.util.DateUtil;
 import com.chatop.chatopapi.util.JwtTokenUtil;
 
 import io.swagger.annotations.ApiOperation;
@@ -41,10 +38,10 @@ import lombok.Data;
 
 @RestController
 @RequestMapping("/api")
-public class RestControl {
+public class ApiController {
 
 	@Autowired
-	private RestService restService;
+	private ApiService apiService;
 	
 	@Autowired
 	private JwtTokenUtil jwtTokentUtil;
@@ -53,16 +50,13 @@ public class RestControl {
 	private AuthenticationManager authenticationManager;
 
 	@Autowired
-	private AuthService authService;
-
-	@Autowired
 	private UserResponse userResponse;
 	
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	@Autowired
-	MessageService messageService;
+	private  DateUtil dateUtil;
 
 
 	/**
@@ -76,10 +70,10 @@ public class RestControl {
 	@ApiOperation(value = "Get one user in json format (id, name, surface, price, picture, description, user_id, created_at) with {id} as url parameter")
 
 	@GetMapping("/user/{id}")
-	public User getUser(@PathVariable("id") final Long id) {
-		User user = this.restService.getUser(id);
-		if (user.getId() != null) {
-			return user;
+	public AppUser getUser(@PathVariable("id") final Long id) {
+		AppUser appUser = this.apiService.getUser(id);
+		if (appUser.getId() != null) {
+			return appUser;
 		} else {
 			throw new CustomException("User not found Exception: /api/user/{i} end point");
 		}
@@ -95,7 +89,7 @@ public class RestControl {
 
 	@GetMapping("/rentals")
 	public Iterable<Rental> getRentals() {
-		Iterable<Rental> rentals = this.restService.getRentals();
+		Iterable<Rental> rentals = this.apiService.getRentals();
 		if (rentals == null) {
 			throw new CustomException("Rental list not found Exception: /api/rentals end point");
 		}
@@ -113,7 +107,7 @@ public class RestControl {
 
 	@GetMapping("/rentals/{id}")
 	public Rental getRental(@PathVariable("id") final Long id) {
-		Rental rental = this.restService.getRental(id);
+		Rental rental = this.apiService.getRental(id);
 		if (rental.getId() != null) {
 			return rental;
 		} else {
@@ -138,7 +132,7 @@ public class RestControl {
 
 		Rental r = new Rental(name, price, surface, description, picname, 1L);
 
-		Rental rent = this.restService.saveRental(r);
+		Rental rent = this.apiService.saveRental(r);
 
 		if (rent != null)
 			return "{\"message\": \"Rental created !\"}";
@@ -166,7 +160,7 @@ public class RestControl {
 		r.setSurface(surface);
 		r.setPrice(price);
 
-		Rental rent = this.restService.updateRental(r);
+		Rental rent = this.apiService.updateRental(r);
 
 		if (rent != null)
 			return "{\"message\": \"Rental updated !\"}";
@@ -185,14 +179,14 @@ public class RestControl {
 
 	@GetMapping(path = "/auth/me")
 	public UserResponse currentUserInfo(@AuthenticationPrincipal UserDetails userDetails) {
-		User user;
+		AppUser appUser;
 
-		user = authService.getUserInfos(userDetails.getUsername());
-		userResponse.setId(user.getId());
-		userResponse.setName(user.getName());
-		userResponse.setUsername(user.getEmail());
-		userResponse.setUpdatedAt(ChatopApiApplication.formatDate(user.getUpdatedAt()));
-		userResponse.setCreatedAt(ChatopApiApplication.formatDate(user.getCreatedAt()));
+		appUser = apiService.getUserInfos(userDetails.getUsername());
+		userResponse.setId(appUser.getId());
+		userResponse.setName(appUser.getName());
+		userResponse.setUsername(appUser.getEmail());
+		userResponse.setUpdatedAt(dateUtil.formatDate(appUser.getUpdatedAt()));
+		userResponse.setCreatedAt(dateUtil.formatDate(appUser.getCreatedAt()));
 
 		return userResponse;
 	}
@@ -218,13 +212,13 @@ public class RestControl {
 			try {
 
 				String encodedPassword = bCryptPasswordEncoder.encode(registerRequest.getPassword());
-				authService.registerUser(registerRequest.getName(), encodedPassword, registerRequest.getEmail());
+				apiService.registerUser(registerRequest.getName(), encodedPassword, registerRequest.getEmail());
 			} catch (Exception e) {
 				return "{}";
 			}
 		}
 
-		final UserDetails userDetails = authService.loadUserByUsername(registerRequest.getEmail());
+		final UserDetails userDetails = apiService.loadUserByUsername(registerRequest.getEmail());
 
 		final String token = jwtTokentUtil.generateToken(userDetails);
 
@@ -251,7 +245,7 @@ public class RestControl {
 			return "{\"message\":\"error\"}";
 		}
 			
-		final UserDetails userDetails = authService.loadUserByUsername(jwtRequest.getLogin());
+		final UserDetails userDetails = apiService.loadUserByUsername(jwtRequest.getLogin());
 		
 		final String token = jwtTokentUtil.generateToken(userDetails);
 
@@ -278,7 +272,7 @@ public class RestControl {
 		message.setRentalId(messageRequest.getRental_id());
 		message.setUserId( messageRequest.getUser_id());
 		message.setMessage(messageRequest.getMessage());
-		messageService.saveMessage(message);
+		apiService.saveMessage(message);
 			
 		return "{\"message\": \"Message sent with success\"}";
 		

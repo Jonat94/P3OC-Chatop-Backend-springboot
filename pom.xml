@@ -8,7 +8,7 @@
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.7.17</version>
 	</parent>
-	<groupId>com.chatop.</groupId>
+	<groupId>comchatop</groupId>
 	<artifactId>chatop-api</artifactId>
 	<version>1</version>
 	<name>chatop-api</name>

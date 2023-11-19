@@ -17,14 +17,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.chatop.chatopapi.filter.JwtRequestFilter;
-import com.chatop.chatopapi.service.AuthService;
+import com.chatop.chatopapi.service.ApiService;
+
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
-	private AuthService authService;
+	private ApiService apiService;
 
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
@@ -32,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		//A expliciter, decodage du password bcrypt
-		auth.userDetailsService(authService).passwordEncoder(passwordEncoder());
+		auth.userDetailsService(apiService).passwordEncoder(passwordEncoder());
 	}
 
 	@Override

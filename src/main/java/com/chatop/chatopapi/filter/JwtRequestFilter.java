@@ -15,14 +15,14 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.chatop.chatopapi.service.AuthService;
+import com.chatop.chatopapi.service.ApiService;
 import com.chatop.chatopapi.util.JwtTokenUtil;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
 	@Autowired
-	private AuthService authService;
+	private ApiService apiService;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -45,7 +45,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 			
-			UserDetails userDetails = this.authService.loadUserByUsername(username);
+			UserDetails userDetails = this.apiService.loadUserByUsername(username);
 			
 			if (jwtTokenUtil.validateToken(jwt, userDetails)) {
 			
