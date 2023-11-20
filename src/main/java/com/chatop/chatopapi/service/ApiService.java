@@ -32,10 +32,10 @@ public class ApiService implements UserDetailsService{
 	private UserRepository userRepository;
 	
 	@Autowired
-	MessageRepository messageRepository;
+	private MessageRepository messageRepository;
 	
 	@Autowired
-	DateUtil dateUtil;
+	private DateUtil dateUtil;
 	
 	public AppUser getUser(Long id) {	
 		return this.userRepository.findById(id).get();

@@ -60,12 +60,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 }
             ).and();
         
-      //Set Permissions on end points
-      		http.authorizeRequests()
+      //Set Permissions on end points 
+       //Filter for 401 error instead of bad request on invalid token
+      	/*	http.authorizeRequests()
       		.antMatchers("/api/auth/login").permitAll()
       		.antMatchers("/api/auth/register").permitAll()
       		.anyRequest().authenticated();
-		
+       */
+        
+       //filter for swagger 
+       http.authorizeRequests()
+ 		.antMatchers("/api/auth/me").authenticated()
+ 		.antMatchers("/api/rentals","/api/rentals/*", "/api/messages" ).authenticated()
+ 		.anyRequest().permitAll();
 		
 		//add JWT token filter
 		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
