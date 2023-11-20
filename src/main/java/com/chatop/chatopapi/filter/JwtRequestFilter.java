@@ -28,47 +28,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
-
-//	@Override
-//	protected void doFilterInternal (
-//			HttpServletRequest request
-//			, HttpServletResponse response
-//			, FilterChain filterChain) throws ServletException, IOException {
-//
-//		final String authorizationHeader = request.getHeader("Authorization");
-//
-//		String username = null;
-//		String jwt = null;
-//
-//		if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-//			jwt = authorizationHeader.substring(7);
-//			username = jwtTokenUtil.getUsernameFromToken(jwt);
-//		}
-//
-//		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-//			
-//			UserDetails userDetails = this.apiService.loadUserByUsername(username);
-//			
-//			if (jwtTokenUtil.validateToken(jwt, userDetails)) {
-//			
-//				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-//						userDetails, null, userDetails.getAuthorities());
-//				
-//				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-//				
-//				SecurityContextHolder.getContext().setAuthentication(authentication);
-//			}
-//		}
-//		filterChain.doFilter(request, response);
-//	}
-	
-	
 	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-
-		// final String header = request.getHeader("Authorization");
 
 		// Get authorization header and validate
 		final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -78,12 +41,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		}
 
 		// Get jwt token and validate
-		 String token = header.split(" ")[1].trim();
-
-		System.out.println("ttok:" + token);
-		//token ="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqb25hdGhhbi5jb3Vsb25AZ21haWwuY29tIiwiZXhwIjoxNzAwNTI5NjczLCJpYXQiOjE3MDA0NzU2NzN9._34ZlzkbBaDzD24MsSD5gAdQBGQ-5-1G2IaZKXsmANr4HXpnKPQyJSqjQT94QzfbhOxNaa3pk1gdoGzGoGmxOg";
-		token ="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqb25hdGhhbi5jb3Vsb25AZ21haWwuY28tIiwiZXhwIjoxNzAwNTI5NjczLCJpYXQiOjE3MDA0NzU2NzN9._34ZlzkbBaDzD24MsSD5gAdQBGQ-5-1G2IaZKXsmANr4HXpnKPQyJSqjQT94QzfbhOxNaa3pk1gdoGzGoGmxOg";
-		System.out.println( jwtTokenUtil.validateTokenIntegrity(token) );
+		String token = header.split(" ")[1].trim();
 		if (!(jwtTokenUtil.validateTokenIntegrity(token))) {
 			filterChain.doFilter(request, response);
 			return;
@@ -106,8 +64,5 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(request, response);
     }
-		
-		
-
-	}
+}
 	
