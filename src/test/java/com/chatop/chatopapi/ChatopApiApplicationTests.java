@@ -11,20 +11,20 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.chatop.chatopapi.controller.RestControl;
-import com.chatop.chatopapi.service.RestService;
+import com.chatop.chatopapi.controller.ApiController;
+import com.chatop.chatopapi.service.ApiService;
 
 
 
 
-@WebMvcTest(controllers = RestControl.class)
+@WebMvcTest(controllers = ApiController.class)
 class RentalControllerTests {
 
 	@Autowired
 	private MockMvc mockMvc; 
 
 	@MockBean
-	private RestService restService;
+	private ApiService restService;
 
 	@Test
 	void contextLoads() {

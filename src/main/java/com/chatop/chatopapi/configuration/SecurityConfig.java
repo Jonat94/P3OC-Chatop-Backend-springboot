@@ -1,7 +1,9 @@
 package com.chatop.chatopapi.configuration;
 
 
-import static org.springframework.security.config.Customizer.withDefaults;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,51 +12,69 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.chatop.chatopapi.filter.JwtRequestFilter;
-import com.chatop.chatopapi.service.AuthService;
+import com.chatop.chatopapi.service.ApiService;
+
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
-	AuthService authService;
+	private ApiService apiService;
 
 	@Autowired
-	JwtRequestFilter jwtRequestFilter;
+	private JwtRequestFilter jwtRequestFilter;
 
-	@Autowired
-	JwtAuthenticationEntryPoint entryPoint;
-	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(authService);
+		//A expliciter, decodage du password bcrypt
+		auth.userDetailsService(apiService).passwordEncoder(passwordEncoder());
 	}
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http
-		.csrf().disable()
-		.authorizeRequests()
-		.antMatchers("/api/auth/login")
-		.permitAll()
-		.anyRequest()
-		.authenticated()
-		.and()
-		.sessionManagement()
-		.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		/*.and()
-		.exceptionHandling()
-		.authenticationEntryPoint(entryPoint);
-		*/
+		//Disable csrf
+		http = http.csrf().disable();
+		
+		
+		
+		//Set session mangment to stateless
+		http.sessionManagement()
+		.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		.and();
+		
+		// Set unauthorized requests exception handler
+       http = http
+            .exceptionHandling()
+            .authenticationEntryPoint(
+                (request, response, ex) -> {
+                    response.sendError(
+                        HttpServletResponse.SC_UNAUTHORIZED,
+                        ex.getMessage()
+                    );
+                }
+            ).and();
+        
+      //Set Permissions on end points 
+       //Filter for 401 error instead of bad request on invalid token
+      	/*	http.authorizeRequests()
+      		.antMatchers("/api/auth/login").permitAll()
+      		.antMatchers("/api/auth/register").permitAll()
+      		.anyRequest().authenticated();
+       */
+        
+       //filter for swagger 
+       http.authorizeRequests()
+ 		.antMatchers("/api/auth/me").authenticated()
+ 		.antMatchers("/api/rentals","/api/rentals/*", "/api/messages" ).authenticated()
+ 		.anyRequest().permitAll();
+		
+		//add JWT token filter
 		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
 	}
@@ -65,10 +85,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 	
-	 
-	  @Bean
-	    public PasswordEncoder encoder() {
-	        return new BCryptPasswordEncoder();
-	    }
+	@Bean
+	public BCryptPasswordEncoder passwordEncoder() {
+	    return new BCryptPasswordEncoder();
+	}
+	
 
 }

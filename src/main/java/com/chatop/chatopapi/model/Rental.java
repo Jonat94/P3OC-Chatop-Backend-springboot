@@ -1,7 +1,5 @@
 package com.chatop.chatopapi.model;
 
-import java.sql.Timestamp;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,20 +13,6 @@ import lombok.Data;
 @Entity
 @Table(name = "RENTALS")
 public class Rental {
-
-	public Rental() {
-	}
-
-
-	public Rental(String name, Double price, Double surface, String description, String picture, Long ownerId) {
-		this.name = name;
-		this.price = price;
-		this.surface = surface;
-		this.description = description;
-		this.picture = picture;
-		this.ownerId = ownerId;
-		
-	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,5 +36,16 @@ public class Rental {
 
 	@Column(name = "owner_id")
 	private Long ownerId;
-
+	
+	public Rental(){}
+	
+	public Rental(String name, Double price, Double surface, String description, String picture, Long ownerId) {
+		this.name = name;
+		this.price = price;
+		this.surface = surface;
+		this.description = description;
+		this.picture = picture;
+		this.ownerId = ownerId;
+	}
 }
+

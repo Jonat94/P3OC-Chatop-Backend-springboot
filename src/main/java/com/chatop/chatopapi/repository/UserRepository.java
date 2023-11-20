@@ -5,16 +5,15 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-
-import com.chatop.chatopapi.model.User;
+import com.chatop.chatopapi.model.AppUser;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface UserRepository extends CrudRepository<AppUser, Long> {
 	
 	
-	public List<User> findByName(String name);
+	public List<AppUser> findByName(String name);
 	
-	public List<User> findByEmail(String email);
+	public List<AppUser> findByEmail(String email);
 
 	
 	
